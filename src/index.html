@@ -1,0 +1,84 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webvr - cubes</title>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<!-- Origin Trial Token, feature = WebVR (For Chrome M62+), origin = https://threejs.org, expires = 2018-05-12 -->
+		<meta http-equiv="origin-trial" data-feature="WebVR (For Chrome M62+)" data-expires="2018-05-12" content="AkM+gi6Fb7IUBwFLs18hn/x6dusbsVRYG9KBTWUUjvmT0m0wGkxRPy63Aj/i+Ti4d6qMEMnRcsR7MVV5Wuvp/AIAAABQeyJvcmlnaW4iOiJodHRwczovL3RocmVlanMub3JnOjQ0MyIsImZlYXR1cmUiOiJXZWJWUjEuMU02MiIsImV4cGlyeSI6MTUyNjExODIwMH0=">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #101010;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			a {
+				color: #f00;
+			}
+			#info {
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				color: #fff;
+				text-align: center;
+			}
+
+
+		</style>
+	</head>
+	<body>
+
+		<div id="info">
+			<p id="ctInfo">
+			</p>
+		</div>
+
+        <script src='https://cdn.jsdelivr.net/npm/webvr-polyfill@latest/build/webvr-polyfill.js'></script>
+        <script>
+            
+        // Get config from URL
+        var config = (function() {
+          var config = {};
+          var q = window.location.search.substring(1);
+          if (q === '') {
+            return config;
+          }
+          var params = q.split('&');
+          var param, name, value;
+          for (var i = 0; i < params.length; i++) {
+            param = params[i].split('=');
+            name = param[0];
+            value = param[1];
+
+            // All config values are either boolean or float
+            config[name] = value === 'true' ? true :
+                           value === 'false' ? false :
+                           parseFloat(value);
+          }
+          return config;
+        })();
+        var polyfill = new WebVRPolyfill(config);
+
+        console.log("Using webvr-polyfill version " + WebVRPolyfill.version +
+                    " with configuration: " + JSON.stringify(config));
+        </script>
+
+		
+		<!-- <script type="text/javascript" src="./dat.gui/build/dat.gui.js"></script> -->
+		<!-- <script src="./OrbitControls.js"></script> -->
+
+		<script src="./bundle.js"></script>
+	
+	</body>
+</html>
+
+
