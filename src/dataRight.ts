@@ -11,7 +11,7 @@ export var dataRight ={
 		},
 		position : {
 			x : -9.5, 
-			y : 5-3, 
+			y : 50, 
 			z : -1
 		},
 		orientation : 1,
@@ -95,8 +95,92 @@ export var dataRight ={
 		},
 		orientation : 1,
 
-	}],
-	videoUri : './assets/p1.mp4',
+	},
+//7
+	{
+		name : 'awChouette',
+		scale : {
+			x : 1.8*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -46, 
+			y : 4.9-3, 
+			z : -8
+		},
+		orientation : 1,
+
+	},
+//8
+	{
+		name : 'awPaon',
+		scale : {
+			x : 1.8*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -46, 
+			y : 4.9-3, 
+			z : -8
+		},
+		orientation : 1,
+
+	},
+//9
+	{
+		name : 'awPelican',
+		scale : {
+			x : 1.8*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -46, 
+			y : 4.9-3, 
+			z : -8
+		},
+		orientation : 1,
+
+	},
+//10
+	{
+		name : 'awPingouin',
+		scale : {
+			x : 1.8*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -46, 
+			y : 4.9-3, 
+			z : -8
+		},
+		orientation : 1,
+
+	},
+//11
+	{
+		name : 'awZebre',
+		scale : {
+			x : 1.8*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -46, 
+			y : 4.9-3, 
+			z : -8
+		},
+		orientation : 1,
+
+	}
+
+
+
+	],
+	videoUri : './assets/p1_4k.mp4',
 	position : {
 		x : 5,
 		y : 0,

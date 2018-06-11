@@ -5,6 +5,8 @@
  * Based on @tojiro's vr-samples-utils.js
  */
 
+
+
 export var WEBVR = {
 
 	createButton: function ( renderer, onSwitchVRClicked ) {

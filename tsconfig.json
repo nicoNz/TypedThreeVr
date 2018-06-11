@@ -2,7 +2,10 @@
     "files": [
         // "src/main.ts",
         // "src/greet.ts"
-        "src/sceneVR.js"
+        "src/sceneVR.ts",
+        "src/Artwork.ts",
+        "src/Spot.ts"
+
     ],
     "compilerOptions": {
         "noImplicitAny": false,
