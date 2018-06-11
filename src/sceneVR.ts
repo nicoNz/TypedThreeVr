@@ -7,7 +7,7 @@ import {dataCenter} from './dataCenter';
 import {Artwork, loadTextures} from './Artwork';
 import {Spot} from './Spot';
 import {settings} from './settings';
-
+import {VideoBufferView} from './videoBufferView';
 
 var container;
 var camera, scene, renderer;
@@ -32,6 +32,7 @@ var isDisplayingImage = false;
 var spotsInitialData;
 var gui;
 
+
 interface Data {
 	picture  : THREE.Mesh,
 	artworks : Artwork[],
@@ -44,7 +45,9 @@ interface Data {
 	videoControls: {
 		video : HTMLVideoElement,
 		mesh : THREE.Mesh
-	}[];
+	}[],
+	videoBufferView : VideoBufferView
+
 }
 
 let data: Data = {
@@ -59,7 +62,8 @@ let data: Data = {
 
 	selectedArtwork 	: null,
 	selectedSpot		: null,
-	videoControls : null
+	videoControls : null,
+	videoBufferView : null
 };
 
 
@@ -86,6 +90,8 @@ function init() {
 
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
+
+	
 
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color( 0x505050 );
@@ -141,7 +147,7 @@ function init() {
 
 	var button =  WEBVR.createButton( renderer , (b) => { isVR = b });
 	document.body.appendChild( button );
-
+	data.videoBufferView = new VideoBufferView();
 	let b = document.createElement('button');
 	_stylizeElement(b);
 	b.onclick = ( e: MouseEvent ) => {
@@ -212,16 +218,24 @@ function init() {
 	spots[1].moveSpot();
 	spots[2].onLeaveSpot();
 	
+	let videos = [];
+	spots.forEach((s: Spot) => {
+		videos.push(s.videoSphere.video);
+	});
 	// data.videoControls = [];
-	// spots.forEach((s: Spot) => {
-	// 	let video = s.videoSphere.video;
-	// 	video.addEventListener('progress',  () => {
-	// 		console.log('progress' + s.name);
-	// 	    var bf = video.buffered;
-	// 	    var time = video.currentTime;
-	// 	    //video.load();
-	// 	    console.log('length : ' + bf.length);
-	// 	    if ( bf.length > 0 ) {
+	videos.forEach((v: Spot) => {
+		//let video = s.videoSphere.video;
+		v.addEventListener('progress',  () => {
+			data.videoBufferView.drawBuffers(videos);
+
+		});
+	});
+			// console.log('progress' + s.name);
+		 //    var bf = video.buffered;
+		 //    var time = video.currentTime;
+		 //    //video.load();
+		 //    console.log('length : ' + bf.length);
+		 //    if ( bf.length > 0 ) {
 
 		    	
 
