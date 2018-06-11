@@ -400,7 +400,7 @@ function rayCast() {
 
 function getZoom() {
 	if(data.highlightedArtwork != null) {
-		return 1 + (data.highlightedArtwork.loadState / data.highlightedArtwork.maxLoadState)	
+		return 1 + 1.8*(data.highlightedArtwork.loadState / data.highlightedArtwork.maxLoadState)	
 	} else {
 		return camera.zoom > 1 ? camera.zoom - .05 : 1;
 
@@ -409,7 +409,7 @@ function getZoom() {
 
 var zoomDir = 0;
 function render() {
-	camera.zoom = getZoom();
+	camera.zoom = getZoom() ;
 
 	updateCamera();
 	camera.updateProjectionMatrix();
