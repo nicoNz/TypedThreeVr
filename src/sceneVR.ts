@@ -32,6 +32,7 @@ var isDisplayingImage = false;
 var spotsInitialData;
 var gui;
 
+var performance = false;
 
 interface Data {
 	picture  : THREE.Mesh,

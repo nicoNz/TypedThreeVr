@@ -20,15 +20,15 @@ export class VideoBufferView {
 
 			let ctx= this.ctx;
 			ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			ctx.fillStyle="#FF0000";
+			
 			let h = this.canvas.height / vids.length;
 			let iWidth = 1/this.canvas.width;
 			let y = 0;
 			for(let v of vids) {
-				
+				ctx.fillStyle="#FF0000";
 				let d = v.duration;
 				let t = v.currentTime;
-				let prg =  d/t ;
+				let prg =  t/d ;
 				let rng = v.buffered;
 
 				for (let i = 0 ; i < rng.length ; i++) {
@@ -37,6 +37,8 @@ export class VideoBufferView {
 					ctx.fillRect(b, y*h, e-b, h);
 					console.log(e);
 				}
+				ctx.fillStyle="#00FF00";
+				ctx.fillRect(this.canvas.width*prg, y*h, 1.5, h);
 				y++;
 			}
 
