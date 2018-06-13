@@ -1,7 +1,10 @@
+
+import {settings} from './settings';
 var scale = 1.8;
-export var dataRight ={
+var iset  = 'new';
+export var dataRight = {
 	name : 'dataRight',
-	artworks : [
+	artworks :  (iset == 'old') ? [
 	{
 		name : 'awAne',
 		scale : {
@@ -81,6 +84,8 @@ export var dataRight ={
 
 	},
 //6
+
+
 	{
 		name : 'awPerroquet',
 		scale : {
@@ -179,8 +184,156 @@ export var dataRight ={
 
 
 
+	]
+//_______________________________NEW __________________________
+	: [
+
+	{
+		name : 'awGrue',
+		scale : {
+			x : 1.2*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : 7, 
+			y : 1.9, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awPaon',
+		scale : {
+			x : 1.*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : 4, 
+			y : 3, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awKangourou',
+		scale : {
+			x : 1.*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : 1.5, 
+			y : 1, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awPerroquet',
+		scale : {
+			x : 1.*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -0.52, 
+			y : 2.8, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awGiraf',
+		scale : {
+			x : 1.*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -3.11, 
+			y : 1.8, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awCameleon',
+		scale : {
+			x : 1.*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -5.4, 
+			y : 1, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awColombe',
+		scale : {
+			x : 1.*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -7.69, 
+			y : 1.8, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awPhoenix',
+		scale : {
+			x : 1.4*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -10, 
+			y : 2.8, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awOie',
+		scale : {
+			x : 1.0*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -12.5, 
+			y : 1, 
+			z : 10
+		},
+		orientation : 2,
+	},
+	{
+		name : 'awAne',
+		scale : {
+			x : 1.2*scale,
+			y : 1.8*scale,
+			z : 1.5
+		},
+		position : {
+			x : -14, 
+			y : 2.8, 
+			z : 10
+		},
+		orientation : 2,
+	},
 	],
-	videoUri : './assets/p1_4k.mp4',
+
+
+	mediaType : settings.fullMode ? 'video' : 'image', //image | video
+	videoUri : './assets/p1_4kv2.mp4',
+	imageUri : './assets/i1.jpg',
 	position : {
 		x : 5,
 		y : 0,

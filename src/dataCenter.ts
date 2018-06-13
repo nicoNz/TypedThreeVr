@@ -1,8 +1,10 @@
+import {settings} from './settings';
 var scale = 1.8;
 var _4K = true;
+var iset  = 'new';
 export var dataCenter ={
 	name : 'dataCenter',
-	artworks : [
+	artworks : (iset == 'old') ? [
 //1
 		{
 		name : 'awAne',
@@ -180,8 +182,93 @@ export var dataCenter ={
 	}
 
 
+	] 
+	:
+	[
+
+
+	{
+		name : 'awKangourou',
+		scale : {
+			x :_4K ? 3.5 : 1*scale,
+			y :_4K ? 2.7 : 1.5*scale,
+			z :_4K ? 1 : 1
+		},
+		position : {
+			x : 3.5, 
+			y : .6, 
+			z :_4K ? 10 : 10
+		},
+		orientation : 2,
+
+	},
+	{
+		name : 'awPerroquet',
+		scale : {
+			x :_4K ? 3.5 : 1*scale,
+			y :_4K ? 2.7 : 1.5*scale,
+			z :_4K ? 1 : 1
+		},
+		position : {
+			x : 1.5, 
+			y : 2.8, 
+			z :_4K ? 10 : 10
+		},
+		orientation : 2,
+
+	},
+	{
+		name : 'awGiraf',
+		scale : {
+			x :_4K ? 3.5 : 1*scale,
+			y :_4K ? 2.7 : 1.5*scale,
+			z :_4K ? 1 : 1
+		},
+		position : {
+			x :-1.3, 
+			y : 1.7, 
+			z :_4K ? 10 : 10
+		},
+		orientation : 2,
+
+	},
+	{
+		name : 'awCameleon',
+		scale : {
+			x :_4K ? 3.5 : 1*scale,
+			y :_4K ? 2.7 : 1.5*scale,
+			z :_4K ? 1 : 1
+		},
+		position : {
+			x : -4.2, 
+			y : 0.8, 
+			z :_4K ? 10 : 10
+		},
+		orientation : 2,
+
+	},
+	{
+		name : 'awColombe',
+		scale : {
+			x :_4K ? 3.5 : 1*scale,
+			y :_4K ? 2.7 : 1.5*scale,
+			z :_4K ? 1 : 1
+		},
+		position : {
+			x : -7, 
+			y : 1.9, 
+			z :_4K ? 10 : 10
+		},
+		orientation : 2,
+
+	},
+
+
+
 	],
-	videoUri : './assets/p3_4k.mp4',
+	mediaType : settings.fullMode ? 'video' : 'image', //image | video
+	videoUri : './assets/p2_4kv2.mp4',
+	imageUri : './assets/i2.jpg',
 	position : {
 		x : 0,
 		y : 0,

@@ -34,6 +34,10 @@ var gui;
 
 var performance = false;
 
+var showBuffers = false;
+
+
+
 interface Data {
 	picture  : THREE.Mesh,
 	artworks : Artwork[],
@@ -47,7 +51,9 @@ interface Data {
 		video : HTMLVideoElement,
 		mesh : THREE.Mesh
 	}[],
-	videoBufferView : VideoBufferView
+	videoBufferView : VideoBufferView,
+	switchModeButton: HTMLButtonElement,
+	cursor: THREE.Mesh,
 
 }
 
@@ -64,7 +70,9 @@ let data: Data = {
 	selectedArtwork 	: null,
 	selectedSpot		: null,
 	videoControls : null,
-	videoBufferView : null
+	videoBufferView : null,
+	switchModeButton : null,
+	cursor: null,
 };
 
 
@@ -81,18 +89,14 @@ function _stylizeElement( element : HTMLButtonElement) {
 	element.style.textAlign = 'center';
 	//element.style.opacity = '0.5';
 	//element.style.outline = 'none';
+	
 	element.style.zIndex = '999';
-	element.textContent = 'START'
+	element.textContent = 'LAUNCH PERFORMANCE'
 }
 
 function init() {
-
-
-
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
-
-	
 
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color( 0x505050 );
@@ -112,14 +116,16 @@ function init() {
 		);
 		crosshair.position.z = - 2;
 		camera.add( crosshair );
+		data.cursor = crosshair;
 	}
-	//loadTextures();
+
 	createImage();
 
 	Artwork.onArtworkSelected = (texRef: THREE.Texture) => {
 		data.picture.material['map'] = texRef;
 		data.picture.material['needsUpdate'] = true;
 		data.picture.visible = true;
+		data.cursor.visible = false;
 		console.log('image : ');
 		console.log(data.picture);
 
@@ -127,6 +133,7 @@ function init() {
 	Artwork.onLeave = () => {
 		data.picture.material['map'] = null;
 		data.picture.visible = false;
+		data.cursor.visible = true;
 	};
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -148,24 +155,33 @@ function init() {
 
 	var button =  WEBVR.createButton( renderer , (b) => { isVR = b });
 	document.body.appendChild( button );
-	data.videoBufferView = new VideoBufferView();
+	if(showBuffers) {
+		data.videoBufferView = new VideoBufferView();
+	}
 	let b = document.createElement('button');
 	_stylizeElement(b);
+
 	b.onclick = ( e: MouseEvent ) => {
-		data.spots.forEach(s=>{
-			var playPromise = s.videoSphere.video.play();
-			if (playPromise !== undefined) {
-  				playPromise.then(function() {
-    			console.log('started to play');
-  }).catch(function(error) {
-    // Automatic playback failed.
-    // Show a UI element to let the user manually start playback.
-  });
-}
-		});
+		if(settings.fullMode) {
+			data.spots.forEach(s=>{
+				var playPromise = s.videoSphere.video.play();
+				if (playPromise !== undefined) {
+	  				playPromise
+	  				.then(function() {
+	    				console.log('started to play');
+	  				})
+	  				.catch(function(error) {
+	  					console.warn('fail to play');
+	  				});
+				}
+			});
+		} else {
+			console.log('on switch perf click');
+			switchMode();
+		}
 	}
 	document.body.appendChild( b );
-
+	data.switchModeButton = b;
 
 	spotsInitialData = [
 		dataLeft,
@@ -178,7 +194,6 @@ function init() {
 	spotsInitialData.forEach( spotInitialData => {
 		spots.push(new Spot(spotInitialData, scene));
 	});
-	//data.spot = spots[1];
 
 	spots[0].artworks.forEach(a => {
 		//a.inColor = new THREE.Color(0xff0000);
@@ -197,11 +212,9 @@ function init() {
 	});
 
 	Spot.onSpotSelected = (selection: Spot) => {
-		if(data.spot != null) {
-
+		if (data.spot != null) {
 			data.spot.onLeaveSpot();
-		}
-		else {
+		} else {
 			console.log('data is still null');
 		}
 		data.spot = selection;
@@ -225,36 +238,14 @@ function init() {
 	});
 	// data.videoControls = [];
 	videos.forEach((v: Spot) => {
-		//let video = s.videoSphere.video;
-		v.addEventListener('progress',  () => {
-			data.videoBufferView.drawBuffers(videos);
-
-		});
+		if(showBuffers) {		
+			if(v != null) {
+				v.addEventListener('progress',  () => {
+					data.videoBufferView.drawBuffers(videos);
+				});
+			}
+		}
 	});
-			// console.log('progress' + s.name);
-		 //    var bf = video.buffered;
-		 //    var time = video.currentTime;
-		 //    //video.load();
-		 //    console.log('length : ' + bf.length);
-		 //    if ( bf.length > 0 ) {
-
-		    	
-
-	// 		    var loadStartPercentage = bf.start(0) ;
-	// 		    var loadEndPercentage = bf.end(0);
-
-	// 		    controlBuffered();
-
-	// 		    document.getElementById('progress' + s.name).innerHTML = 'from : ' + Math.floor(loadStartPercentage*100)*.01 + 
-	// 		    														 ' |  to ' + Math.floor(loadEndPercentage*100)*.01 + 
-	// 		    														 ' |  is ' + Math.floor(video.currentTime*100)*.01
-	// 	    }
-
-			
-	// 	});
-	
-	// })
-
 
 	camera.position.copy(data.spot.camPosition);
 	console.log('cam');
@@ -268,39 +259,46 @@ function init() {
 		}
 	}
 	gui = setupGui();
-}
+} 
 
 let isPlaying = true;
 let cursor = 0;
 
-// function controlBuffered() {
-// 	let ends = [];
-// 	let spots = data.spots;
-// 	spots.forEach(s => {
-// 		if(s.videoSphere.video.buffered.length < 1){
-// 			return;
-// 		}
-// 		ends.push(s.videoSphere.video.buffered.start(0));
-// 	});
-// 	cursor = spots[1].videoSphere.video.currentTime;
-// 	let later = 5000;
-// 	for (let end of ends) {
-// 		if(end < later) {
-// 			later = end;
-// 		}
-// 	}
-// 	if (isPlaying == false) {
-// 		if (cursor < later - 2) {
-// 			play();
-// 		}
-// 	}
-// 	else {
-// 		if (cursor > later - 1) {
-// 			pause();
-// 		}
 
-// 	}
-// }
+function switchMode() {
+
+	performance = !performance;
+	console.log('performance : ' + performance);
+
+
+	let s = data.spots[0];
+	if (performance) {
+		data.switchModeButton.textContent = 'SWITCH TO EXHIBITION'
+		s.moveSpot();
+		s.setVideoMode();
+		let playPromise = s.videoSphere.video.play();
+		if (playPromise !== undefined) {
+			playPromise
+			.then(function() {
+   				console.log('started to play');
+  			})
+  			.catch(function(error) {
+    			console.log('started to play');
+  			})
+  		}
+	 	data.spots[1].onLeaveSpot();
+		data.spots[2].onLeaveSpot();
+  		data.spots[1].visible = false;
+  		data.spots[2].visible = false;
+  	}
+	else {
+		s.setImageMode();
+		data.switchModeButton.textContent = 'LAUNCH PERFORMANCE';
+
+		data.spots[2].visible = true;
+  		data.spots[1].visible = true;
+	}
+}
 
 function play() {
 	console.log('PLAY');
@@ -343,7 +341,6 @@ function onMouseDown(event) {
 
 	onPointerDownLon = lon;
 	onPointerDownLat = lat;
-
 }
 function onArtworkSelected(artwork) {
 }
@@ -386,17 +383,20 @@ function rayCast() {
 
 	raycaster.setFromCamera( settings.withVR ?  { x: 0, y: 0 } : mouse , camera );
 
-	var intersectsSpots = raycaster.intersectObjects( data.spots );
-	if( intersectsSpots.length == 0 ) {
-		if (data.highlightedSpot != null) {
-			data.highlightedSpot.onLeave();
-			data.highlightedSpot = null;
+	if(!performance) {	
+		var intersectsSpots = raycaster.intersectObjects( data.spots );
+		if( intersectsSpots.length == 0 ) {
+			if (data.highlightedSpot != null) {
+				data.highlightedSpot.onLeave();
+				data.highlightedSpot = null;
+			}
+		} else {	
+			let collidee = intersectsSpots[0].object as Spot;
+			collidee.onStartCursorOver();
+			data.highlightedSpot = collidee;
 		}
-	} else {	
-		let collidee = intersectsSpots[0].object as Spot;
-		collidee.onStartCursorOver();
-		data.highlightedSpot = collidee;
 	}
+
 
 	if(data.spot != null) {
 		var intersectsArtworks = raycaster.intersectObjects( data.spot.artworks );
@@ -430,33 +430,28 @@ function render() {
 	camera.updateProjectionMatrix();
 	rayCast();
 	renderer.render( scene, camera );
-	if(window['VRPose'] != undefined) {
-		var o = VRPose['orientation'];
-		if (o =! null) {
-			info.innerHTML = o[0] + ' ' + o[1] + ' ' + o[2] + ' ' + o[3] + ' ';
-		}
-		else {
-			info.innerHTML = "has orientation";
-		}
-	}
-	else {
-		info.innerHTML = "no orientation";
-	}
+	// if(window['VRPose'] != undefined) {
+	// 	var o = VRPose['orientation'];
+	// 	if (o =! null) {
+	// 		info.innerHTML = o[0] + ' ' + o[1] + ' ' + o[2] + ' ' + o[3] + ' ';
+	// 	}
+	// 	else {
+	// 		info.innerHTML = "has orientation";
+	// 	}
+	// }
+	// else {
+	// 	info.innerHTML = "no orientation";
+	// }
 }
-
 
 //__________________________________________________________//
 //-------------------object creation------------------------//
-
-
 
 function createImage() {
 	var geometry = new THREE.PlaneBufferGeometry(1, 1, 1);
 	var material   = new THREE.MeshBasicMaterial(  { color : '#ffffff'}  );
 	material.side = THREE.DoubleSide;
 	var mesh = new THREE.Mesh( geometry, material );
-
-	//mesh.scale.copy(new THREE.Vector3(2.5, 2.5,2.5));
 
 	var gMask = new THREE.PlaneBufferGeometry(1, 1, 1);
 	var gMaterial   = new THREE.MeshBasicMaterial( { color : '#444444'} );
@@ -467,21 +462,15 @@ function createImage() {
 	gMesh.scale.copy(new THREE.Vector3(2, -2, 2));
 	gMesh.position.z = -2;
 	mesh.position.z = -2;
-	//mesh.layer = 1;
-	//gMesh.layer = 0;
 
-	//camera.add(gMesh);
 	camera.add(mesh);
 	mesh['layer'] = 1;
 	mesh.visible = false;
 	data.picture = mesh;
-
 }
 
 //_________________________Collisions________________________//
 //-----------------------------------------------------------//
-
-
 
 var enterZoom = false;
 var leaveZoom = false;
@@ -518,8 +507,6 @@ dat.gui.GUI.prototype.addVector = function(name, o, cb) {
 	return this;
 }
 
-init();
-animate();
 
 
 var info = document.getElementById('ctInfo');
@@ -537,3 +524,5 @@ function onPointerUnrestricted() {
 		document.exitPointerLock();
 	}
 }
+init();
+animate();
