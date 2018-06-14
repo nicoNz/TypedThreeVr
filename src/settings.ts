@@ -8,5 +8,5 @@ export const settings = {
 		defaultSpot :  0x555555
 	},
 	withVR : true,
-	fullMode : true //if use 3 players at the same time
+	fullMode : false //if use 3 players at the same time
 }

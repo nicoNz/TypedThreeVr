@@ -77,6 +77,7 @@ let data: Data = {
 
 
 
+
 function _stylizeElement( element : HTMLButtonElement) {
 	element.style.position = 'absolute';
 	element.style.top = '60px';
@@ -87,9 +88,6 @@ function _stylizeElement( element : HTMLButtonElement) {
 	element.style.color = '#fff';
 	element.style.font = 'normal 13px sans-serif';
 	element.style.textAlign = 'center';
-	//element.style.opacity = '0.5';
-	//element.style.outline = 'none';
-	
 	element.style.zIndex = '999';
 	element.textContent = 'LAUNCH PERFORMANCE'
 }
@@ -175,6 +173,7 @@ function init() {
 	  				});
 				}
 			});
+			console.log('full');
 		} else {
 			console.log('on switch perf click');
 			switchMode();
@@ -259,6 +258,16 @@ function init() {
 		}
 	}
 	gui = setupGui();
+	let playPromise = data.spots[0].videoSphere.video.play();
+	if (playPromise !== undefined) {
+		playPromise
+		.then(function() {
+				console.log('started to play');
+		})
+		.catch(function(error) {
+			console.log('started to play');
+		})
+	}
 } 
 
 let isPlaying = true;
@@ -276,6 +285,7 @@ function switchMode() {
 		data.switchModeButton.textContent = 'SWITCH TO EXHIBITION'
 		s.moveSpot();
 		s.setVideoMode();
+		s.videoSphere.video.currentTime = 4*60+35;
 		let playPromise = s.videoSphere.video.play();
 		if (playPromise !== undefined) {
 			playPromise

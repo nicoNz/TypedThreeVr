@@ -39,7 +39,7 @@ class VideoSphereMesh extends Mesh {
 		video.loop = true;
 		video.muted = false;
 		video.src = uri;
-
+		video.currentTime = 4*60+35;
 		video.crossOrigin = 'anonymous';
 		video.autoplay = autoplay;
 		if(play) { //play is global to this file, falsde by default
@@ -58,7 +58,8 @@ class VideoSphereMesh extends Mesh {
 			
 			if ( video.readyState >= video.HAVE_CURRENT_DATA ) {
 				texture.needsUpdate = true;
-				console.log(video.currentTime);
+				//console.log(video.currentTime);
+			//	console.log(video.currentTime);
 
 			}
 		}, 1000 / 24 );

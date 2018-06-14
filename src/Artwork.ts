@@ -14,13 +14,13 @@ export function loadTextures(): TexCollection {
 		{name : 'awPerroquet', url : './assets/awPerroquet'+filVersion			},
 
 		{name : 'awChouette',  url : './assets/awChouette'+filVersion			},
-		{name : 'awPaon', 	   url : './assets/awPaon'+filVersion			},
+		{name : 'awPaon', 	   url : './assets/awPaon'+filVersion				},
 		{name : 'awPelican',   url : './assets/awPellican'+filVersion			},
 		{name : 'awPingouin',  url : './assets/awPingouin'+filVersion			},
-		{name : 'awZebre',     url : './assets/awZebre'+filVersion			},
-		{name : 'awGrue',     url : './assets/awGrue'+filVersion			},
-		{name : 'awPegase',     url : './assets/awPegase'+filVersion			},
-		{name : 'awColombe',     url : './assets/awColombe'+filVersion			},
+		{name : 'awZebre',     url : './assets/awZebre'+filVersion				},
+		{name : 'awGrue',      url : './assets/awGrue'+filVersion				},
+		{name : 'awPegase',    url : './assets/awPegase'+filVersion				},
+		{name : 'awColombe',   url : './assets/awColombe'+filVersion			},
 
 		
 	];
