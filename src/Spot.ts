@@ -2,6 +2,7 @@ import {Mesh, CircleBufferGeometry, MeshBasicMaterial,
 	    Vector3, SphereBufferGeometry, LinearFilter, RGBFormat, Texture, 
 	    NearestFilter, Scene, Color, DoubleSide, TextureLoader} from 'three';
 import {Artwork} from './Artwork';
+import {VideoPlayer, AudioPlayer} from './MediaPlayer';
 
 let autoplay = false;
 let play = false;

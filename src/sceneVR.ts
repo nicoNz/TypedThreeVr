@@ -33,7 +33,6 @@ var spotsInitialData;
 var gui;
 
 var performance = false;
-
 var showBuffers = false;
 
 
@@ -77,20 +76,6 @@ let data: Data = {
 
 
 
-
-function _stylizeElement( element : HTMLButtonElement) {
-	element.style.position = 'absolute';
-	element.style.top = '60px';
-	element.style.padding = '12px 6px';
-	element.style.border = '1px solid #fff';
-	element.style.borderRadius = '4px';
-	element.style.background = 'transparent';
-	element.style.color = '#fff';
-	element.style.font = 'normal 13px sans-serif';
-	element.style.textAlign = 'center';
-	element.style.zIndex = '999';
-	element.textContent = 'LAUNCH PERFORMANCE'
-}
 
 function init() {
 	container = document.createElement( 'div' );
@@ -147,7 +132,6 @@ function init() {
 	renderer.domElement.addEventListener( 'touchend', onMouseUp, false );
 
 	window.addEventListener( 'resize', onWindowResize, false );
-
 	window.addEventListener( 'vrdisplaypointerrestricted', onPointerRestricted, false );
 	window.addEventListener( 'vrdisplaypointerunrestricted', onPointerUnrestricted, false );
 
@@ -195,18 +179,12 @@ function init() {
 	});
 
 	spots[0].artworks.forEach(a => {
-		//a.inColor = new THREE.Color(0xff0000);
-		//a.outColor = new THREE.Color(0xffaaaa);
 		a.material['color'] = a.outColor;
 	});
 	spots[1].artworks.forEach(a => {
-		//a.inColor = new THREE.Color(0x00ff00);
-		//a.outColor = new THREE.Color(0xaaffaa);
 		a.material['color'] = a.outColor;
 	});
 	spots[2].artworks.forEach(a => {
-		//a.inColor = new THREE.Color(0x0000ff);
-		//a.outColor = new THREE.Color(0xaaaaff);
 		a.material['color'] = a.outColor;
 	});
 
@@ -247,9 +225,6 @@ function init() {
 	});
 
 	camera.position.copy(data.spot.camPosition);
-	console.log('cam');
-	console.log(camera.position);
-	console.log('init');
 
 	document.onkeypress = (k) => {
 		if(k.charCode === 32) {
@@ -262,10 +237,10 @@ function init() {
 	if (playPromise !== undefined) {
 		playPromise
 		.then(function() {
-				console.log('started to play');
+			console.log('started to play');
 		})
 		.catch(function(error) {
-			console.log('started to play');
+			console.log('fail to play');
 		})
 	}
 } 
@@ -435,23 +410,10 @@ function getZoom() {
 var zoomDir = 0;
 function render() {
 	camera.zoom = getZoom() ;
-
 	updateCamera();
 	camera.updateProjectionMatrix();
 	rayCast();
 	renderer.render( scene, camera );
-	// if(window['VRPose'] != undefined) {
-	// 	var o = VRPose['orientation'];
-	// 	if (o =! null) {
-	// 		info.innerHTML = o[0] + ' ' + o[1] + ' ' + o[2] + ' ' + o[3] + ' ';
-	// 	}
-	// 	else {
-	// 		info.innerHTML = "has orientation";
-	// 	}
-	// }
-	// else {
-	// 	info.innerHTML = "no orientation";
-	// }
 }
 
 //__________________________________________________________//
@@ -534,5 +496,23 @@ function onPointerUnrestricted() {
 		document.exitPointerLock();
 	}
 }
+
+
+
+function _stylizeElement( element : HTMLButtonElement) {
+	element.style.position = 'absolute';
+	element.style.top = '60px';
+	element.style.padding = '12px 6px';
+	element.style.border = '1px solid #fff';
+	element.style.borderRadius = '4px';
+	element.style.background = 'transparent';
+	element.style.color = '#fff';
+	element.style.font = 'normal 13px sans-serif';
+	element.style.textAlign = 'center';
+	element.style.zIndex = '999';
+	element.textContent = 'LAUNCH PERFORMANCE'
+}
+
+
 init();
 animate();
