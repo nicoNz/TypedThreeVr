@@ -73,7 +73,7 @@ export class Artwork extends Mesh{
 		this.textureRef = textureRefs[o.name];
 		this.orientation = o.orientation;
 		scene.add(this);
-		console.log('hello art');
+
 		this.onBeforeRender = this.update;
 		this.visible = showZone;
 	
@@ -104,7 +104,6 @@ export class Artwork extends Mesh{
 			if (this.loadState-- <= 0) {
 				this.loadState == 0 ;
 			}
-			console.log(this.name + ' ' + this.loadState);
 		}
 	}
 
@@ -117,7 +116,6 @@ export class Artwork extends Mesh{
 				this.isLoaded = true;
 				this.displayArtworkPicture();
 			}
-			console.log(this.name + ' ' + this.loadState);
 		}
 	}
 	displayArtworkPicture() {

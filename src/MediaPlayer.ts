@@ -1,10 +1,12 @@
 export class VideoPlayer {
+	fadeMode = true;
 	player: HTMLVideoElement;
 	src: string;
 	volume: number;
 	constructor(src: string){
 		let player = document.createElement('video');
 		player.src = src;
+		this.player = player;
 
 	}
 	setSrc(src: string) {
@@ -14,8 +16,8 @@ export class VideoPlayer {
 	setVolume(v) {
 		this.volume = v;
 	}
-	setReadRange:(from: number, to: number) {
-		//modify tghe url
+	setReadRange(from: number, to: number) {
+		//modify the url
 	}
 	fadeIn( onIn?: ()=>void ) {
 		setTimeout(() => {
@@ -39,16 +41,23 @@ export class VideoPlayer {
 			}
 		}, .04);
 	}
-
+	play() {
+		if(this.fadeMode) {
+			this.fadeIn();
+		}
+		this.player.play();
+	}
 }
 
 export class AudioPlayer {
-	player: HTMLVideoElement;
+	player: HTMLAudioElement;
 	src: string;
 	volume: number;
+	fadeMode = true;
 	constructor(src: string){
-		let player = document.createElement('video');
+		let player = document.createElement('audio');
 		player.src = src;
+		this.player = player;
 	}
 	setSrc(src: string) {
 		this.src = src;
@@ -77,4 +86,27 @@ export class AudioPlayer {
 			}
 		}, .04);
 	}
+	loop(b: boolean) {
+		if (b == undefined) {
+			b = true;
+		}
+		this.player.loop = b;
+	}
+	play() {
+		if(this.fadeMode) {
+			this.fadeIn();
+		}
+		this.player.play();
+	}
+	pause() {
+		if(this.fadeMode) {
+			this.fadeOut();
+		}
+		this.player.pause();
+	}
+	stop() {
+		this.pause();
+		this.player.currentTime = 0;
+	}
+
 }

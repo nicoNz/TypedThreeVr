@@ -8,6 +8,8 @@ import {Artwork, loadTextures} from './Artwork';
 import {Spot} from './Spot';
 import {settings} from './settings';
 import {VideoBufferView} from './videoBufferView';
+import {VideoPlayer, AudioPlayer} from './MediaPlayer';
+import { ZoomedInPicture } from './ZoomedInPicture';
 
 var container;
 var camera, scene, renderer;
@@ -35,7 +37,8 @@ var gui;
 var performance = false;
 var showBuffers = false;
 
-
+var leftPlayer = new VideoPlayer('./assets/p3_4kv2.mp4#t=2,3');
+var audioPlayer = new AudioPlayer('loop.mp3');
 
 interface Data {
 	picture  : THREE.Mesh,
@@ -53,7 +56,6 @@ interface Data {
 	videoBufferView : VideoBufferView,
 	switchModeButton: HTMLButtonElement,
 	cursor: THREE.Mesh,
-
 }
 
 let data: Data = {
@@ -66,16 +68,13 @@ let data: Data = {
 	highlightedArtwork 	: null,
 	highlightedSpot		: null,
 
-	selectedArtwork 	: null,
-	selectedSpot		: null,
-	videoControls : null,
+	selectedArtwork : null,
+	selectedSpot	: null,
+	videoControls 	: null,
 	videoBufferView : null,
-	switchModeButton : null,
+	switchModeButton: null,
 	cursor: null,
 };
-
-
-
 
 function init() {
 	container = document.createElement( 'div' );
@@ -102,7 +101,7 @@ function init() {
 		data.cursor = crosshair;
 	}
 
-	createImage();
+	data.picture = new ZoomedInPicture(camera);
 
 	Artwork.onArtworkSelected = (texRef: THREE.Texture) => {
 		data.picture.material['map'] = texRef;
@@ -232,22 +231,25 @@ function init() {
 			console.log(VRPose['orientation']);
 		}
 	}
+
 	gui = setupGui();
-	let playPromise = data.spots[0].videoSphere.video.play();
-	if (playPromise !== undefined) {
-		playPromise
-		.then(function() {
-			console.log('started to play');
-		})
-		.catch(function(error) {
-			console.log('fail to play');
-		})
-	}
+	// let playPromise = data.spots[0].videoSphere.video.play();
+	// if (playPromise !== undefined) {
+	// 	playPromise
+	// 	.then(function() {
+	// 		console.log('started to play');
+	// 	})
+	// 	.catch(function(error) {
+	// 		console.log('fail to play');
+	// 	})
+	// }
+	audioPlayer.loop(true);
+	audioPlayer.play();
 } 
+
 
 let isPlaying = true;
 let cursor = 0;
-
 
 function switchMode() {
 
@@ -307,7 +309,6 @@ function pause() {
 function onMouseMove( event ) {
 
 	if ( isUserInteracting === true ) {
-		//console.log('move');
 		lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
 		lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 	}
@@ -340,7 +341,6 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 }
-
 
 function updateCamera() {
 	lat = Math.max( - 85, Math.min( 85, lat ) );
@@ -382,7 +382,6 @@ function rayCast() {
 		}
 	}
 
-
 	if(data.spot != null) {
 		var intersectsArtworks = raycaster.intersectObjects( data.spot.artworks );
 		if( intersectsArtworks.length == 0 ) {
@@ -403,7 +402,6 @@ function getZoom() {
 		return 1 + 1.8*(data.highlightedArtwork.loadState / data.highlightedArtwork.maxLoadState)	
 	} else {
 		return camera.zoom > 1 ? camera.zoom - .05 : 1;
-
 	}
 }
 
@@ -467,7 +465,6 @@ function setupGui() {
     return gui;
 }
 
-
 dat.gui.GUI.prototype.addVector = function(name, o, cb) {
 	if(cb == undefined) {
 		cb=(v)=>{console.log(v)};
@@ -478,8 +475,6 @@ dat.gui.GUI.prototype.addVector = function(name, o, cb) {
 	folder.add(o, 'z').onChange( v => {o.z = v; cb(o);} );
 	return this;
 }
-
-
 
 var info = document.getElementById('ctInfo');
 function onPointerRestricted() {
@@ -497,8 +492,6 @@ function onPointerUnrestricted() {
 	}
 }
 
-
-
 function _stylizeElement( element : HTMLButtonElement) {
 	element.style.position = 'absolute';
 	element.style.top = '60px';
@@ -512,7 +505,6 @@ function _stylizeElement( element : HTMLButtonElement) {
 	element.style.zIndex = '999';
 	element.textContent = 'LAUNCH PERFORMANCE'
 }
-
 
 init();
 animate();

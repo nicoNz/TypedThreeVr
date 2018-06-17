@@ -75,6 +75,9 @@ class VideoSphereMesh extends Mesh {
 		texture.format 	  = RGBFormat; 
 		this.material['map'] = texture;
 	}
+	setVideoPlayer(vp: VideoPlayer) {
+
+	}
 }
 
 export class Spot extends Mesh {
@@ -135,7 +138,10 @@ export class Spot extends Mesh {
 	setVideoMode() {
 		this.videoSphere.createVideoTexture(this.videoUri);
 		//this.videoSphere.video.play();
-		
+	}
+
+	setVideolayer(vp: VideoPlayer) {
+		this.videoSphere.setVideoPlayer(vp);
 	}
 
 	onStartCursorOver() {
