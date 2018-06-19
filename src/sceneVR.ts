@@ -6,10 +6,11 @@ import {dataRight} from './dataRight';
 import {dataCenter} from './dataCenter';
 import {Artwork, loadTextures} from './Artwork';
 import {Spot} from './Spot';
-import {settings} from './settings';
+import {settings, sceneInspector} from './settings';
 import {VideoBufferView} from './videoBufferView';
 import {VideoPlayer, AudioPlayer} from './MediaPlayer';
 import { ZoomedInPicture } from './ZoomedInPicture';
+
 
 var container;
 var camera, scene, renderer;
@@ -82,6 +83,8 @@ let data: Data = {
 };
 
 function init() {
+
+
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 
