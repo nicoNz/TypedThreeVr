@@ -17,22 +17,12 @@ var camera, scene, renderer;
 var isUserInteracting = false;
 var mouse = new THREE.Vector2();
 var lookAt;
-var isMouseDown = false;
+
 var crosshair;
 
-var lon = 0, onMouseDownLon = 0;
-var lat = 0, onMouseDownLat = 0;
-var phi = 0, theta = 0;
 var distance = 50;
 var isVR = true;
 var raycaster = new THREE.Raycaster();
-var onMouseDownMouseX = 0, onMouseDownMouseY = 0;
-var onPointerDownPointerX = 0;
-var onPointerDownPointerY = 0;
-var onPointerDownLon = 0;
-var onPointerDownLat = 0;
-var isDisplayingImage = false;
-var spotsInitialData;
 var gui;
 
 var performance = false;
@@ -40,50 +30,9 @@ var showBuffers = false;
 var startTime = 4*60+30;
 var endTime = 5*60 + 10;
 var leftPlayer = new VideoPlayer('./assets/p3_4kv2.mp4', startTime, endTime);
-
-
 var audioPlayer = new AudioPlayer('./assets/musiqueArche.mp3', 0, 600);
 
-
-
-interface Data {
-	picture  : THREE.Mesh,
-	artworks : Artwork[],
-	spots : Spot[],
-	spot : Spot,
-	highlightedArtwork 	: Artwork,
-	highlightedSpot		: Spot,
-	selectedArtwork 	: Artwork,
-	selectedSpot		: Spot,
-	videoControls: {
-		video : HTMLVideoElement,
-		mesh : THREE.Mesh
-	}[],
-	videoBufferView : VideoBufferView,
-	switchModeButton: HTMLButtonElement,
-	cursor: THREE.Mesh,
-}
-
-let data: Data = {
-
-	picture : null,
-	artworks 	  : [],
-	spots  		  : [],
-	spot : null,
-
-	highlightedArtwork 	: null,
-	highlightedSpot		: null,
-
-	selectedArtwork : null,
-	selectedSpot	: null,
-	videoControls 	: null,
-	videoBufferView : null,
-	switchModeButton: null,
-	cursor: null,
-};
-
 function init() {
-
 
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
@@ -178,7 +127,6 @@ function init() {
 		dataRight
 	];
 
-
 	data.spots = [];
 	let spots = data.spots;
 	spotsInitialData.forEach( spotInitialData => {
@@ -217,12 +165,6 @@ function init() {
 	spots[1].moveSpot();
 	spots[2].onLeaveSpot();
 	
-	// let videos = [];
-	// spots.forEach((s: Spot) => {
-	// 	videos.push(s.videoSphere.video);
-	// });
-	// data.videoControls = [];
-
 	audioPlayer.play();
 	if(showBuffers) {
 		data.videoBufferView.addMedia(leftPlayer);
@@ -245,20 +187,7 @@ function init() {
 	 	}	
 	});
 
-	
-
-	// videos.forEach((v: Spot) => {
-	// 	if(showBuffers) {		
-	// 		if(v != null) {
-	// 			v.addEventListener('progress',  () => {
-	// 				data.videoBufferView.update();
-	// 			});
-	// 		}
-	// 	}
-	// });
-
 	camera.position.copy(data.spot.camPosition);
-
 	document.onkeypress = (k) => {
 		if(k.charCode === 32) {
 			console.log('orientation');
@@ -267,16 +196,7 @@ function init() {
 	}
 
 	//gui = setupGui();
-	// let playPromise = data.spots[0].videoSphere.video.play();
-	// if (playPromise !== undefined) {
-	// 	playPromise
-	// 	.then(function() {
-	// 		console.log('started to play');
-	// 	})
-	// 	.catch(function(error) {
-	// 		console.log('fail to play');
-	// 	})
-	// }
+
 	audioPlayer.player.autoplay = true;
 	audioPlayer.loop(true);
 	audioPlayer.play();
@@ -505,6 +425,8 @@ dat.gui.GUI.prototype.addVector = function(name, o, cb) {
 	folder.add(o, 'z').onChange( v => {o.z = v; cb(o);} );
 	return this;
 }
+
+
 
 var info = document.getElementById('ctInfo');
 function onPointerRestricted() {
