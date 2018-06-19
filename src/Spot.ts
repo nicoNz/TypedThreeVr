@@ -15,18 +15,21 @@ class VideoSphereMesh extends Mesh {
 		let sphereBufferGeometry = new SphereBufferGeometry( 800, 60, 40 );
 		sphereBufferGeometry.scale( -1, 1, 1 );
 		return sphereBufferGeometry;
+
 	})() ;
 	video: HTMLVideoElement = null;
+	timerID: number = null;
 
 	constructor(p: Vector3, mediaType: 'video' | 'image' ,  uri: string) {
 		
 		super(VideoSphereMesh.sphereBufferGeometry, new MeshBasicMaterial({ color: new Color(0xffffff) }));
-		this.video = document.createElement( 'video' ) as HTMLVideoElement;
+		//this.video = document.createElement( 'video' ) as HTMLVideoElement;
 		this.position.copy(new Vector3 (p.x, p.y, p.y));
-
+/*
 		if ( mediaType == 'video') {
 			this.createVideoTexture(uri)
-		} else if (mediaType == 'image') {
+*/
+		if (mediaType == 'image') {
 			this.createImageTexture(uri);
 		}
 		console.log(this);
@@ -68,16 +71,40 @@ class VideoSphereMesh extends Mesh {
 		this['needsUpdate'] = true;
 		this.visible = true;
 	}
-	createImageTexture(uri) {
-		let texture =new TextureLoader().load( uri );	
+	setVideoTexture(videoTex: VideoPlayer) {
+		let v = videoTex.player;
+		if(this.timerID != null) {
+			window.clearInterval(this.timerID);
+			this.timerID = null;
+		}
+		let texture = new Texture(v as HTMLVideoElement);
 		texture.minFilter =LinearFilter;// NearestFilter;
 		texture.magFilter =LinearFilter; //NearestFilter;
+		texture.format 	  = RGBFormat;
+		this.material['map'] = texture;
+		this.timerID = window.setInterval(e=>{
+			if ( v.readyState >= v.HAVE_CURRENT_DATA ) {
+				this.material['map'].needsUpdate = true;
+			}
+		});
+		this.visible = true;
+		//this.material['map'].needsUpdate = true;
+	}
+	createImageTexture(uri) {
+		if(this.timerID != null) {
+			window.clearInterval(this.timerID);
+			this.timerID = null;
+		}
+		let texture =new TextureLoader().load( uri );	
+		texture.minFilter = LinearFilter;// NearestFilter;
+		texture.magFilter = LinearFilter; //NearestFilter;
 		texture.format 	  = RGBFormat; 
 		this.material['map'] = texture;
 	}
 	setVideoPlayer(vp: VideoPlayer) {
 
 	}
+
 }
 
 export class Spot extends Mesh {
@@ -119,7 +146,6 @@ export class Spot extends Mesh {
 		});
 
 		this.videoSphere = new VideoSphereMesh(eyePosition, o.mediaType, o.mediaType == 'video' ? o.videoUri : o.imageUri); 
-
 		scene.add(this.videoSphere);
 		this.camPosition = eyePosition;
 		console.log(this.name);
@@ -128,6 +154,8 @@ export class Spot extends Mesh {
 		//this.visible = true;
 		this.onBeforeRender = this.update;
 		scene.add(this);
+
+
 	}
 
 	setImageMode() {
@@ -140,8 +168,12 @@ export class Spot extends Mesh {
 		//this.videoSphere.video.play();
 	}
 
-	setVideolayer(vp: VideoPlayer) {
-		this.videoSphere.setVideoPlayer(vp);
+	setVideoPlayer(vp: VideoPlayer) {
+		this.videoSphere.setVideoTexture(vp);
+	}
+
+	setTextureSource(texSource: VideoPlayer) {
+		this.videoSphere.setVideoPlayer(texSource);
 	}
 
 	onStartCursorOver() {

@@ -1,6 +1,8 @@
+import {MediaPlayer} from './MediaPlayer';
 export class VideoBufferView {
 	canvas : HTMLCanvasElement;
 	ctx : CanvasRenderingContext2D;
+	mediaList: MediaPlayer[] = [];
 	constructor() {
 		let canvas = document.createElement('canvas');
 		canvas.style.position = 'absolute';
@@ -16,15 +18,23 @@ export class VideoBufferView {
 	}
 
 	drawBuffers(vids: HTMLVideoElement[]) {
+	}
+
+	addMedia(m: MediaPlayer) {
+		this.mediaList.push(m)
+	}
+	update() {
+		console.log('bufferview update');
 		window.requestAnimationFrame(() => {
 
 			let ctx= this.ctx;
 			ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			
-			let h = this.canvas.height / vids.length;
-			let iWidth = 1/this.canvas.width;
+			let h = this.canvas.height / this.mediaList.length;
+			let iWidth = 1./this.canvas.width;
 			let y = 0;
-			for(let v of vids) {
+			for(let m of this.mediaList) {
+				let v = m.player;
 				ctx.fillStyle="#FF0000";
 				let d = v.duration;
 				let t = v.currentTime;
@@ -33,7 +43,7 @@ export class VideoBufferView {
 
 				for (let i = 0 ; i < rng.length ; i++) {
 					let b = this.canvas.width*rng.start(i)/d;
-					let e = this.canvas.width*rng.end(i)/d;
+					let e = this.canvas.width*rng.end  (i)/d;
 					ctx.fillRect(b, y*h, e-b, h);
 					console.log(e);
 				}
@@ -43,6 +53,7 @@ export class VideoBufferView {
 			}
 
 		});
+
 	}
 		
 

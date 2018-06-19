@@ -6,9 +6,9 @@ let is4K = true;
 let filVersion = !is4K ? '.png' : '800.jpg';
 export function loadTextures(): TexCollection {
 	var textures = [
-		{name : 'awAne', 	   url : './assets/awAne'+filVersion				},
+		{name : 'awAne', 	   url : './assets/awAne'	  +filVersion			},
 		{name : 'awCameleon',  url : './assets/awCameleon'+filVersion 			},
-		{name : 'awGiraf', 	   url : './assets/awGiraf'+filVersion	 			},
+		{name : 'awGiraf', 	   url : './assets/awGiraf'	+filVersion	 			},
 		{name : 'awKangourou', url : './assets/awKangourou'+filVersion			}, 
 		{name : 'awOie', 	   url : './assets/awOie'+filVersion				},
 		{name : 'awPerroquet', url : './assets/awPerroquet'+filVersion			},
@@ -21,8 +21,6 @@ export function loadTextures(): TexCollection {
 		{name : 'awGrue',      url : './assets/awGrue'+filVersion				},
 		{name : 'awPegase',    url : './assets/awPegase'+filVersion				},
 		{name : 'awColombe',   url : './assets/awColombe'+filVersion			},
-
-		
 	];
 
 	let textureRefs: TexCollection = {};
@@ -86,8 +84,6 @@ export class Artwork extends Mesh{
 			this.material['color'] = this.inColor;
 			console.log(this.name + ' out');
 		}
-		//this.whileCursorOver();
-
 	}
 	onLeave() {
 		console.log(this.name + ' leave');

@@ -36,9 +36,14 @@ var gui;
 
 var performance = false;
 var showBuffers = false;
+var startTime = 4*60+30;
+var endTime = 5*60 + 10;
+var leftPlayer = new VideoPlayer('./assets/p3_4kv2.mp4', startTime, endTime);
 
-var leftPlayer = new VideoPlayer('./assets/p3_4kv2.mp4#t=2,3');
-var audioPlayer = new AudioPlayer('loop.mp3');
+
+var audioPlayer = new AudioPlayer('./assets/musiqueArche.mp3', 0, 600);
+
+
 
 interface Data {
 	picture  : THREE.Mesh,
@@ -110,7 +115,6 @@ function init() {
 		data.cursor.visible = false;
 		console.log('image : ');
 		console.log(data.picture);
-
 	};
 	Artwork.onLeave = () => {
 		data.picture.material['map'] = null;
@@ -171,6 +175,7 @@ function init() {
 		dataRight
 	];
 
+
 	data.spots = [];
 	let spots = data.spots;
 	spotsInitialData.forEach( spotInitialData => {
@@ -190,6 +195,7 @@ function init() {
 	Spot.onSpotSelected = (selection: Spot) => {
 		if (data.spot != null) {
 			data.spot.onLeaveSpot();
+			data.spot = null;
 		} else {
 			console.log('data is still null');
 		}
@@ -208,20 +214,45 @@ function init() {
 	spots[1].moveSpot();
 	spots[2].onLeaveSpot();
 	
-	let videos = [];
-	spots.forEach((s: Spot) => {
-		videos.push(s.videoSphere.video);
-	});
+	// let videos = [];
+	// spots.forEach((s: Spot) => {
+	// 	videos.push(s.videoSphere.video);
+	// });
 	// data.videoControls = [];
-	videos.forEach((v: Spot) => {
-		if(showBuffers) {		
-			if(v != null) {
-				v.addEventListener('progress',  () => {
-					data.videoBufferView.drawBuffers(videos);
-				});
-			}
+
+	audioPlayer.play();
+	if(showBuffers) {
+		data.videoBufferView.addMedia(leftPlayer);
+		data.videoBufferView.addMedia(audioPlayer);
+
+		audioPlayer.player.addEventListener('progress',  () => {
+		 	data.videoBufferView.update();
+		});
+		leftPlayer.player.addEventListener('progress',  () => {
+		 	data.videoBufferView.update();
+		});
+	}
+	leftPlayer.player.addEventListener('timeupdate',  () => {
+		if(showBuffers) {
+	 		data.videoBufferView.update();
 		}
+	 	if(leftPlayer.player.currentTime >= 5*60+10) {
+	 		leftPlayer.player.currentTime = 4*60+30;
+	 		leftPlayer.play();
+	 	}	
 	});
+
+	
+
+	// videos.forEach((v: Spot) => {
+	// 	if(showBuffers) {		
+	// 		if(v != null) {
+	// 			v.addEventListener('progress',  () => {
+	// 				data.videoBufferView.update();
+	// 			});
+	// 		}
+	// 	}
+	// });
 
 	camera.position.copy(data.spot.camPosition);
 
@@ -232,7 +263,7 @@ function init() {
 		}
 	}
 
-	gui = setupGui();
+	//gui = setupGui();
 	// let playPromise = data.spots[0].videoSphere.video.play();
 	// if (playPromise !== undefined) {
 	// 	playPromise
@@ -243,6 +274,7 @@ function init() {
 	// 		console.log('fail to play');
 	// 	})
 	// }
+	audioPlayer.player.autoplay = true;
 	audioPlayer.loop(true);
 	audioPlayer.play();
 } 
@@ -256,34 +288,29 @@ function switchMode() {
 	performance = !performance;
 	console.log('performance : ' + performance);
 
-
 	let s = data.spots[0];
 	if (performance) {
 		data.switchModeButton.textContent = 'SWITCH TO EXHIBITION'
 		s.moveSpot();
-		s.setVideoMode();
-		s.videoSphere.video.currentTime = 4*60+35;
-		let playPromise = s.videoSphere.video.play();
-		if (playPromise !== undefined) {
-			playPromise
-			.then(function() {
-   				console.log('started to play');
-  			})
-  			.catch(function(error) {
-    			console.log('started to play');
-  			})
-  		}
+
+  		s.setVideoPlayer(leftPlayer);
+  		leftPlayer.play();
+  		leftPlayer.loop(true);
+
 	 	data.spots[1].onLeaveSpot();
 		data.spots[2].onLeaveSpot();
   		data.spots[1].visible = false;
   		data.spots[2].visible = false;
+  		audioPlayer.pause();
   	}
 	else {
 		s.setImageMode();
 		data.switchModeButton.textContent = 'LAUNCH PERFORMANCE';
 
+		leftPlayer.pause();
 		data.spots[2].visible = true;
   		data.spots[1].visible = true;
+  		audioPlayer.play();
 	}
 }
 
